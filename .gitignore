@@ -1,0 +1,76 @@
+# Terraform
+
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Terraform override files
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform lock file (optional keep)
+
+# .terraform.lock.hcl
+
+# CLI configuration files
+
+.terraformrc
+terraform.rc
+
+# Variables
+
+*.tfvars
+*.tfvars.json
+
+# Sensitive files
+
+*.pem
+*.key
+*.crt
+
+# Environment files
+
+.env
+.env.*
+
+# MacOS
+
+.DS_Store
+
+# Windows
+
+Thumbs.db
+desktop.ini
+
+# IDEs
+
+.vscode/
+.idea/
+
+# Logs
+
+*.log
+
+# Python (if scripts added)
+
+**pycache**/
+*.pyc
+
+# Node (if scripts added)
+
+node_modules/
+
+# Build
+
+dist/
+build/
+
+# Backup files
+
+*.backup
+*.bak
