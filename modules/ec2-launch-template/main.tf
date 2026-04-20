@@ -63,4 +63,4 @@ resource "aws_launch_template" "main" {
       encrypted   = true
     }
   }
-}  # ← single closing brace for the whole resource
+} # ← single closing brace for the whole resource

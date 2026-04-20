@@ -3,13 +3,13 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   alarm_name          = "${var.project_name}-${var.environment}-high-cpu"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
-  metric_name        = "CPUUtilization"
-  namespace          = "AWS/EC2"
-  period             = 300
-  statistic          = "Average"
-  threshold          = 70
-  alarm_description  = "EC2 CPU utilization is above 70%"
-  alarm_actions      = [aws_sns_topic.alerts.arn]
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 70
+  alarm_description   = "EC2 CPU utilization is above 70%"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
 
   dimensions = {
     AutoScalingGroupName = var.asg_name
@@ -21,13 +21,13 @@ resource "aws_cloudwatch_metric_alarm" "low_cpu" {
   alarm_name          = "${var.project_name}-${var.environment}-low-cpu"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 2
-  metric_name        = "CPUUtilization"
-  namespace          = "AWS/EC2"
-  period             = 300
-  statistic          = "Average"
-  threshold          = 30
-  alarm_description  = "EC2 CPU utilization is below 30%"
-  alarm_actions      = [aws_sns_topic.alerts.arn]
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 30
+  alarm_description   = "EC2 CPU utilization is below 30%"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
 }
 
 # CloudWatch Alarm - Status Check Failed
@@ -35,13 +35,13 @@ resource "aws_cloudwatch_metric_alarm" "status_check_failed" {
   alarm_name          = "${var.project_name}-${var.environment}-status-check-failed"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
-  metric_name        = "StatusCheckFailed"
-  namespace          = "AWS/EC2"
-  period             = 300
-  statistic          = "Average"
-  threshold          = 1
-  alarm_description  = "EC2 status check failed"
-  alarm_actions      = [aws_sns_topic.alerts.arn]
+  metric_name         = "StatusCheckFailed"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 1
+  alarm_description   = "EC2 status check failed"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
 
   dimensions = {
     AutoScalingGroupName = var.asg_name
@@ -64,9 +64,9 @@ resource "aws_sns_topic_subscription" "email" {
 resource "aws_lambda_function" "slack_notifier" {
   filename         = data.archive_file.slack_lambda.output_path
   function_name    = "${var.project_name}-${var.environment}-slack-notifier"
-  role            = aws_iam_role.slack_lambda.arn
-  handler         = "index.handler"
-  runtime         = "nodejs18.x"
+  role             = aws_iam_role.slack_lambda.arn
+  handler          = "index.handler"
+  runtime          = "nodejs18.x"
   source_code_hash = data.archive_file.slack_lambda.output_base64sha256
 
   environment {
