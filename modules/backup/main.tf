@@ -1,24 +1,10 @@
-# EBS Snapshot lifecycle
-resource "aws_ebs_snapshot" "volume_snapshots" {
-  for_each = toset(var.volume_ids)
-
-  volume_id = each.value
-  tags = {
-    Name        = "${var.project_name}-${var.environment}-snapshot-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
-    Environment = var.environment
-    Project     = var.project_name
-    Retention   = "7 days"
-  }
-}
-
-# Backup lifecycle policy
 resource "aws_dlm_lifecycle_policy" "ebs_backup" {
   description        = "EBS snapshot lifecycle policy for ${var.project_name}"
   execution_role_arn = aws_iam_role.dlm_role.arn
-  state             = "ENABLED"
+  state              = "ENABLED"
 
   policy_details {
-    policy_type = "SIMPLIFIED"
+    policy_type    = "EBS_SNAPSHOT_MANAGEMENT"
     resource_types = ["VOLUME"]
 
     target_tags = {
@@ -29,17 +15,17 @@ resource "aws_dlm_lifecycle_policy" "ebs_backup" {
 
     schedule {
       name = "daily_snapshots"
-      
+
       create_rule {
         interval      = 24
         interval_unit = "HOURS"
         times         = ["03:00"]
       }
-      
+
       retain_rule {
         count = 7
       }
-      
+
       tags_to_add = {
         SnapshotCreator = "DLM"
         Environment     = var.environment

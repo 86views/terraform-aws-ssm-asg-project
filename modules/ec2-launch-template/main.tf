@@ -13,6 +13,7 @@ data "aws_ami" "amazon_linux_2" {
   }
 }
 
+
 resource "aws_launch_template" "main" {
   name_prefix   = "${var.project_name}-${var.environment}-"
   image_id      = data.aws_ami.amazon_linux_2.id
@@ -45,15 +46,21 @@ resource "aws_launch_template" "main" {
     }
   }
 
+  tag_specifications {
+    resource_type = "volume"
+    tags = {
+      Environment = var.environment
+      Project     = var.project_name
+      Backup      = "true"
+    }
+  }
+
   block_device_mappings {
     device_name = "/dev/xvda"
-
     ebs {
       volume_size = var.root_volume_size
       volume_type = "gp3"
       encrypted   = true
-
-     
     }
   }
-}
+}  # ← single closing brace for the whole resource

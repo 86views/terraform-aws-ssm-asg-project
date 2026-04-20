@@ -8,8 +8,3 @@ variable "environment" {
   type        = string
 }
 
-variable "volume_ids" {
-  description = "A list of EBS Volume IDs to create initial snapshots for"
-  type        = list(string)
-  default     = []
-}

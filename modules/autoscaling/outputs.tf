@@ -12,3 +12,8 @@ output "as_group_arn" {
   description = "The ARN of the Auto Scaling Group"
   value       = aws_autoscaling_group.main.arn
 }
+
+output "asg_name" {
+  description = "Name of the Auto Scaling Group"
+  value       = aws_autoscaling_group.main.name
+}

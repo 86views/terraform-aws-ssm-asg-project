@@ -13,14 +13,72 @@ sudo systemctl start httpd
 # Create index.html
 cat <<EOF | sudo tee /var/www/html/index.html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Welcome to ${project_name}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${project_name} Dashboard</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f7f6; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .container { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            border-top: 8px solid #232f3e; 
+            width: 400px;
+        }
+        h1 { color: #232f3e; margin-bottom: 0.5rem; font-size: 1.5rem; }
+        .badge { 
+            background: #ff9900; 
+            color: white; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            font-weight: bold;
+        }
+        .data-row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 10px 0; 
+            border-bottom: 1px solid #eee; 
+        }
+        .label { font-weight: 600; color: #666; }
+        .value { color: #333; font-family: 'Courier New', Courier, monospace; }
+        .footer { margin-top: 1.5rem; font-size: 0.7rem; color: #aaa; text-align: center; }
+    </style>
 </head>
 <body>
-    <h1>Environment: ${environment}</h1>
-    <p>Instance ID: $(curl -s http://169.254.169.254/latest/meta-data/instance-id)</p>
-    <p>Availability Zone: $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)</p>
+    <div class="container">
+        <h1>${project_name}</h1>
+        <span class="badge">Environment: ${environment}</span>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        
+        <div class="data-row">
+            <span class="label">Instance ID:</span>
+            <span class="value">$(curl -s http://169.254.169.254/latest/meta-data/instance-id)</span>
+        </div>
+        
+        <div class="data-row">
+            <span class="label">Availability Zone:</span>
+            <span class="value">$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)</span>
+        </div>
+
+        <div class="data-row">
+            <span class="label">Private IP:</span>
+            <span class="value">$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)</span>
+        </div>
+
+        <p class="footer">Deployed via Oluleye Oluseun terraform & GitHub Actions</p>
+    </div>
 </body>
 </html>
 EOF

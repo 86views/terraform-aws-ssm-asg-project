@@ -78,15 +78,15 @@ resource "aws_lambda_function" "slack_notifier" {
 
 data "archive_file" "slack_lambda" {
   type        = "zip"
-  output_path = "/tmp/slack_lambda.zip"
+  output_path = "${path.module}/slack_lambda.zip"
   source {
-    content  = <<EOF
+    content  = <<-EOF
 exports.handler = async (event) => {
   const https = require('https');
   const message = event.Records[0].Sns.Message;
   
   const data = JSON.stringify({
-    text: `🚨 AWS Alert: ${message}`
+    text: '🚨 AWS Alert: ' + message
   });
   
   const url = new URL(process.env.SLACK_WEBHOOK_URL);
@@ -95,7 +95,7 @@ exports.handler = async (event) => {
     path: url.pathname,
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     }
   };
   
