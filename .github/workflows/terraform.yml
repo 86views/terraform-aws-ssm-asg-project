@@ -69,7 +69,9 @@ jobs:
       with:
         directory: ${{ env.WORKING_DIR }}
         framework: terraform
-        soft_fail: true # Set to false if you want the pipeline to stop on security flaws
+        # Skip checks that are too strict for a simple dev learning project
+        skip_check: CKV_AWS_2,CKV_AWS_26,CKV_AWS_91,CKV_AWS_150,CKV_AWS_173,CKV_AWS_274,CKV_AWS_355,CKV_AWS_290
+        soft_fail: false # Keep this false so it only passes when you say it's okay Set to false if you want the pipeline to stop on security flaws
 
     - name: Terraform Validate
       run: terraform validate

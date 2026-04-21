@@ -77,7 +77,7 @@ cat <<EOF | sudo tee /var/www/html/index.html
             <span class="value">$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)</span>
         </div>
 
-        <p class="footer">Deployed via Oluleye Oluseun Owodunni @86views AWS terraform & GitHub Actions</p>
+        <p class="footer">Deployed via Oluleye Oluseun Oluwatobi damilare @86views AWS terraform & GitHub Actions</p>
     </div>
 </body>
 </html>
