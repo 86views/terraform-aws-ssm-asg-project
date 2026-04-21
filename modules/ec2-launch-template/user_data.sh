@@ -1,3 +1,8 @@
+resource "aws_launch_template" "example" {
+  name_prefix   = "${var.project_name}-${var.environment}-lt-"
+  image_id      = var.ami_id
+  instance_type = var.instance_type
+  user_data     = base64encode(<<-EOF
 #!/bin/bash
 set -e
 
@@ -17,7 +22,7 @@ cat <<EOF | sudo tee /var/www/html/index.html
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${project_name} Dashboard</title>
+    <title>${var.project_name} Dashboard</title>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -58,8 +63,8 @@ cat <<EOF | sudo tee /var/www/html/index.html
 </head>
 <body>
     <div class="container">
-        <h1>${project_name}</h1>
-        <span class="badge">Environment: ${environment}</span>
+        <h1>${var.project_name}</h1>
+        <span class="badge">Environment: ${var.environment}</span>
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
         
         <div class="data-row">
@@ -77,7 +82,7 @@ cat <<EOF | sudo tee /var/www/html/index.html
             <span class="value">$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)</span>
         </div>
 
-        <p class="footer">Deployed via Oluleye Oluseun Oluwatobi damilare @86views AWS terraform & GitHub Actions</p>
+        <p class="footer">Deployed via Oluleye Oluseun Oluwatobi oluwadamilare AWS terraform & GitHub Actions</p>
     </div>
 </body>
 </html>
@@ -111,3 +116,23 @@ cat <<EOF | sudo tee /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agen
 EOF
 
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s
+EOF
+  )
+
+  metadata_options {
+    http_tokens = "required"  # Forces IMDSv2
+    http_endpoint = "enabled"  # Required when http_tokens is set to "required"
+  }
+
+  network_interfaces {
+    associate_public_ip_address = var.associate_public_ip
+    security_groups             = [aws_security_group.ec2.id]
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "${var.project_name}-${var.environment}-ec2-instance"
+    }
+  }
+}
